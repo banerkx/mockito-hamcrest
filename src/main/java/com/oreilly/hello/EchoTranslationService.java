@@ -1,3 +1,6 @@
 package com.oreilly.hello;
 
-public class EchoTranslationService implements TranslationService { }
+public class EchoTranslationService implements TranslationService
+{
+}
+

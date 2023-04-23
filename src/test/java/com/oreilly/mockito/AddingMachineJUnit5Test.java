@@ -13,16 +13,17 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@SuppressWarnings({"ResultOfMethodCallIgnored", "CommentedOutCode"})
+@SuppressWarnings({ "ResultOfMethodCallIgnored", "CommentedOutCode" })
 @ExtendWith(MockitoExtension.class)
-public class AddingMachineJUnit5Test {
-    @Mock
-    private List<Integer> mockList;
+public class AddingMachineJUnit5Test
+{
+  @Mock
+  private List<Integer> mockList;
 
-    @InjectMocks
-    private AddingMachine machine;
+  @InjectMocks
+  private AddingMachine machine;
 
-    @Test
+  @Test
     public void getTotalUsingLoop() {
         when(mockList.size()).thenReturn(3);
         when(mockList.get(0)).thenReturn(1);
@@ -41,7 +42,7 @@ public class AddingMachineJUnit5Test {
         inOrder.verify(mockList, times(3)).get(anyInt());
     }
 
-    @Test
+  @Test
     public void getTotalUsingAnyInt() {
         when(mockList.size()).thenReturn(3);
 //        when(mockList.get(anyInt()))
@@ -66,7 +67,7 @@ public class AddingMachineJUnit5Test {
                 () -> inOrder.verify(mockList, times(3)).get(anyInt()));
     }
 
-    @Test
+  @Test
     public void getTotalUsingStream() {
         when(mockList.stream()).thenReturn(Stream.of(1, 2, 3));
 
@@ -78,7 +79,7 @@ public class AddingMachineJUnit5Test {
         verify(mockList).stream();
     }
 
-    @Test
+  @Test
     void getTotalUsingLoopCustomMatcher() {
         when(mockList.size()).thenReturn(3);
         when(mockList.get(anyInt()))
@@ -93,3 +94,4 @@ public class AddingMachineJUnit5Test {
         // verify(mockList, times(3)).get(argThat(n -> n < 3));
     }
 }
+

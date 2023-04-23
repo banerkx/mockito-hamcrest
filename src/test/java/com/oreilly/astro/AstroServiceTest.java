@@ -17,117 +17,101 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class AstroServiceTest {
-    private final AstroResponse mockAstroResponse =
-            new AstroResponse(7, "Success", Arrays.asList(
-                    new Assignment("John Sheridan", "Babylon 5"),
-                    new Assignment("Susan Ivanova", "Babylon 5"),
-                    new Assignment("Beckett Mariner", "USS Cerritos"),
-                    new Assignment("Brad Boimler", "USS Cerritos"),
-                    new Assignment("Sam Rutherford", "USS Cerritos"),
-                    new Assignment("D'Vana Tendi", "USS Cerritos"),
-                    new Assignment("Ellen Ripley", "Nostromo")
-            ));
+class AstroServiceTest
+{
+  private final AstroResponse mockAstroResponse = new AstroResponse(7, "Success",
+      Arrays.asList(new Assignment("John Sheridan", "Babylon 5"), new Assignment("Susan Ivanova", "Babylon 5"),
+          new Assignment("Beckett Mariner", "USS Cerritos"), new Assignment("Brad Boimler", "USS Cerritos"),
+          new Assignment("Sam Rutherford", "USS Cerritos"), new Assignment("D'Vana Tendi", "USS Cerritos"),
+          new Assignment("Ellen Ripley", "Nostromo")));
 
-    @Mock
-    private Gateway<AstroResponse> gateway;
+  @Mock
+  private Gateway<AstroResponse> gateway;
 
-    @InjectMocks
-    private AstroService service;
+  @InjectMocks
+  private AstroService service;
 
-    // Integration test -- no mocks
-    @Test
-    void testAstroData_RealGatewayRetrofit() {
-        // Create an instance of AstroService using the real Gateway
-        service = new AstroService(new AstroGatewayRetrofit());
+  // Integration test -- no mocks
+  @Test
+  void testAstroData_RealGatewayRetrofit()
+  {
+    // Create an instance of AstroService using the real Gateway
+    service = new AstroService(new AstroGatewayRetrofit());
 
-        // Call the method under test
-        Map<String, Long> astroData = service.getAstroData();
+    // Call the method under test
+    Map<String, Long> astroData = service.getAstroData();
 
-        // Print the results and check that they are reasonable
-        astroData.forEach((craft, number) -> {
-            System.out.println(number + " astronauts aboard " + craft);
-            assertAll(
-                    () -> assertThat(number).isGreaterThanOrEqualTo(0),
-                    () -> assertThat(craft).isNotBlank()
-            );
-        });
-    }
+    // Print the results and check that they are reasonable
+    astroData.forEach((craft, number) -> {
+      System.out.println(number + " astronauts aboard " + craft);
+      assertAll(() -> assertThat(number).isGreaterThanOrEqualTo(0), () -> assertThat(craft).isNotBlank());
+    });
+  }
 
-    // Integration test -- no mocks
-    @Test
-    void testAstroData_RealGatewayHttpClient() {
-        // Create an instance of AstroService using the real Gateway
-        service = new AstroService(new AstroGatewayHttpClient());
+  // Integration test -- no mocks
+  @Test
+  void testAstroData_RealGatewayHttpClient()
+  {
+    // Create an instance of AstroService using the real Gateway
+    service = new AstroService(new AstroGatewayHttpClient());
 
-        // Call the method under test
-        Map<String, Long> astroData = service.getAstroData();
+    // Call the method under test
+    Map<String, Long> astroData = service.getAstroData();
 
-        // Print the results and check that they are reasonable
-        astroData.forEach((craft, number) -> {
-            System.out.println(number + " astronauts aboard " + craft);
-            assertAll(
-                    () -> assertThat(number).isGreaterThanOrEqualTo(0),
-                    () -> assertThat(craft).isNotBlank()
-            );
-        });
-    }
+    // Print the results and check that they are reasonable
+    astroData.forEach((craft, number) -> {
+      System.out.println(number + " astronauts aboard " + craft);
+      assertAll(() -> assertThat(number).isGreaterThanOrEqualTo(0), () -> assertThat(craft).isNotBlank());
+    });
+  }
 
-    // Own mock class -- MockGateway
-    @Test
-    void testAstroData_OwnMockGateway() {
-        // Create the service using the mock Gateway
-        service = new AstroService(new MockGateway());
+  // Own mock class -- MockGateway
+  @Test
+  void testAstroData_OwnMockGateway()
+  {
+    // Create the service using the mock Gateway
+    service = new AstroService(new MockGateway());
 
-        // Call the method under test
-        Map<String, Long> astroData = service.getAstroData();
+    // Call the method under test
+    Map<String, Long> astroData = service.getAstroData();
 
-        // Check the results from the method under test
-        astroData.forEach((craft, number) -> {
-            System.out.println(number + " astronauts aboard " + craft);
-            assertAll(
-                    () -> assertThat(number).isGreaterThan(0),
-                    () -> assertThat(craft).isNotBlank()
-            );
-        });
-    }
+    // Check the results from the method under test
+    astroData.forEach((craft, number) -> {
+      System.out.println(number + " astronauts aboard " + craft);
+      assertAll(() -> assertThat(number).isGreaterThan(0), () -> assertThat(craft).isNotBlank());
+    });
+  }
 
-    // Unit test with mock Gateway using mock(Gateway.class)
-    @SuppressWarnings("unchecked")
-    @Test
-    void testAstroData_MockGateway() {
-        // 1. Create a mock Gateway
-        Gateway<AstroResponse> mockGateway = mock(Gateway.class);
+  // Unit test with mock Gateway using mock(Gateway.class)
+  @SuppressWarnings("unchecked")
+  @Test
+  void testAstroData_MockGateway()
+  {
+    // 1. Create a mock Gateway
+    Gateway<AstroResponse> mockGateway = mock(Gateway.class);
 
-        // 2. Set expectations on the mock Gateway
-        when(mockGateway.getResponse())
-                .thenReturn(mockAstroResponse);
+    // 2. Set expectations on the mock Gateway
+    when(mockGateway.getResponse()).thenReturn(mockAstroResponse);
 
-        // 3. Create an instance of AstroService using the mock Gateway
-        AstroService service = new AstroService(mockGateway);
+    // 3. Create an instance of AstroService using the mock Gateway
+    AstroService service = new AstroService(mockGateway);
 
-        // 4. Call the method under test
-        Map<String, Long> astroData = service.getAstroData();
+    // 4. Call the method under test
+    Map<String, Long> astroData = service.getAstroData();
 
-        // 5. Check the results from the method under test
-        assertThat(astroData)
-                .containsEntry("Babylon 5", 2L)
-                .containsEntry("USS Cerritos", 4L)
-                .containsEntry("Nostromo", 1L)
-                .hasSize(3);
-        astroData.forEach((craft, number) -> {
-            System.out.println(number + " astronauts aboard " + craft);
-            assertAll(
-                    () -> assertThat(number).isGreaterThan(0),
-                    () -> assertThat(craft).isNotBlank()
-            );
-        });
+    // 5. Check the results from the method under test
+    assertThat(astroData).containsEntry("Babylon 5", 2L).containsEntry("USS Cerritos", 4L).containsEntry("Nostromo", 1L)
+        .hasSize(3);
+    astroData.forEach((craft, number) -> {
+      System.out.println(number + " astronauts aboard " + craft);
+      assertAll(() -> assertThat(number).isGreaterThan(0), () -> assertThat(craft).isNotBlank());
+    });
 
-        // 6. Verify that the mock Gateway method was called
-        verify(mockGateway).getResponse();
-    }
+    // 6. Verify that the mock Gateway method was called
+    verify(mockGateway).getResponse();
+  }
 
-    @Test
+  @Test
     void testAstroData_InjectedMockGateway() {
         // Mock Gateway created and injected into AstroService using
         //    @Mock and @InjectMock annotations
@@ -156,38 +140,33 @@ class AstroServiceTest {
         verify(gateway).getResponse();
     }
 
-    // Unit test with injected mock Gateway (uses annotations)
-    @Test
-    void testAstroData_InjectedMockGatewayBDD() {
-        // Mock Gateway created and injected into AstroService using
-        //    @Mock and @InjectMock annotations
-        //
-        // Set the expectations on the mock
-        given(gateway.getResponse())
-                .willReturn(mockAstroResponse);
+  // Unit test with injected mock Gateway (uses annotations)
+  @Test
+  void testAstroData_InjectedMockGatewayBDD()
+  {
+    // Mock Gateway created and injected into AstroService using
+    // @Mock and @InjectMock annotations
+    //
+    // Set the expectations on the mock
+    given(gateway.getResponse()).willReturn(mockAstroResponse);
 
-        // Call the method under test
-        Map<String, Long> astroData = service.getAstroData();
+    // Call the method under test
+    Map<String, Long> astroData = service.getAstroData();
 
-        // Check the results from the method under test
-        assertThat(astroData)
-                .containsEntry("Babylon 5", 2L)
-                .containsEntry("Nostromo", 1L)
-                .containsEntry("USS Cerritos", 4L);
-        astroData.forEach((craft, number) -> {
-            System.out.println(number + " astronauts aboard " + craft);
-            assertAll(
-                    () -> assertThat(number).isGreaterThan(0),
-                    () -> assertThat(craft).isNotBlank()
-            );
-        });
+    // Check the results from the method under test
+    assertThat(astroData).containsEntry("Babylon 5", 2L).containsEntry("Nostromo", 1L).containsEntry("USS Cerritos",
+        4L);
+    astroData.forEach((craft, number) -> {
+      System.out.println(number + " astronauts aboard " + craft);
+      assertAll(() -> assertThat(number).isGreaterThan(0), () -> assertThat(craft).isNotBlank());
+    });
 
-        // Verify the stubbed method was called
-        then(gateway).should().getResponse();
-    }
+    // Verify the stubbed method was called
+    then(gateway).should().getResponse();
+  }
 
-    // Check network failure
-    @Test
+  // Check network failure
+  @Test
     void testAstroData_failedGateway() {
         when(gateway.getResponse()).thenThrow(
                 new RuntimeException(new IOException("Network problems")));
@@ -206,28 +185,25 @@ class AstroServiceTest {
         verify(gateway).getResponse();
     }
 
-    // Check network failure
-    @Test
-    void testAstroData_failedGatewayBDD() {
-        // given:
-        willThrow(new RuntimeException(new IOException("Network problems")))
-                .given(gateway).getResponse();
+  // Check network failure
+  @Test
+  void testAstroData_failedGatewayBDD()
+  {
+    // given:
+    willThrow(new RuntimeException(new IOException("Network problems"))).given(gateway).getResponse();
 
-        // when:
-        Exception exception = assertThrows(
-                RuntimeException.class,
-                () -> service.getAstroData());
+    // when:
+    Exception exception = assertThrows(RuntimeException.class, () -> service.getAstroData());
 
-        // then:
-        Throwable cause = exception.getCause();
-        assertAll(
-                () -> assertEquals(IOException.class, cause.getClass()),
-                () -> assertEquals("Network problems", cause.getMessage())
-        );
+    // then:
+    Throwable cause = exception.getCause();
+    assertAll(() -> assertEquals(IOException.class, cause.getClass()),
+        () -> assertEquals("Network problems", cause.getMessage()));
 
-        // verify:
-        then(gateway).should().getResponse();
-        then(gateway).shouldHaveNoMoreInteractions();
-    }
+    // verify:
+    then(gateway).should().getResponse();
+    then(gateway).shouldHaveNoMoreInteractions();
+  }
 
 }
+

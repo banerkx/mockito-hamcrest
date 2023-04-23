@@ -13,22 +13,23 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AddingMachineAnnotationTest {
-    @Mock
-    private List<Integer> mockList;
+public class AddingMachineAnnotationTest
+{
+  @Mock
+  private List<Integer> mockList;
 
-    @InjectMocks
-    private AddingMachine machine;
+  @InjectMocks
+  private AddingMachine machine;
 
-//    @Rule
-//    public MockitoRule rule = MockitoJUnit.rule().strictness(Strictness.STRICT_STUBS);
+  // @Rule
+  // public MockitoRule rule = MockitoJUnit.rule().strictness(Strictness.STRICT_STUBS);
 
-//    @Before
-//    public void setUp() {
-//        MockitoAnnotations.openMocks(this);
-//    }
+  // @Before
+  // public void setUp() {
+  // MockitoAnnotations.openMocks(this);
+  // }
 
-    @Test
+  @Test
     public void getTotalUsingLoop() {
         when(mockList.size()).thenReturn(3);
         when(mockList.get(0)).thenReturn(1);
@@ -46,7 +47,7 @@ public class AddingMachineAnnotationTest {
         verify(mockList, never()).clear();
     }
 
-    @Test
+  @Test
     public void getTotalUsingStream() {
         when(mockList.stream()).thenReturn(Stream.of(1, 2, 3));
 
@@ -59,3 +60,4 @@ public class AddingMachineAnnotationTest {
     }
 
 }
+

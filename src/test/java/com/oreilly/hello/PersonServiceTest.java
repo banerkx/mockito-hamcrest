@@ -20,47 +20,48 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public class PersonServiceTest {
+public class PersonServiceTest
+{
 
-    @Mock
-    private PersonRepository repository;
+  @Mock
+  private PersonRepository repository;
 
-    @InjectMocks
-    private PersonService service;
+  @InjectMocks
+  private PersonService service;
 
-    @Captor
-    private ArgumentCaptor<Person> personArg;
+  @Captor
+  private ArgumentCaptor<Person> personArg;
 
-    private final List<Person> people = Arrays.asList(
-            new Person(1, "Grace", "Hopper", LocalDate.of(1906, Month.DECEMBER, 9)),
-            new Person(2, "Ada", "Lovelace", LocalDate.of(1815, Month.DECEMBER, 10)),
-            new Person(3, "Adele", "Goldberg", LocalDate.of(1945, Month.JULY, 7)),
-            new Person(14, "Anita", "Borg", LocalDate.of(1949, Month.JANUARY, 17)),
-            new Person(5, "Barbara", "Liskov", LocalDate.of(1939, Month.NOVEMBER, 7)));
+  private final List<Person> people = Arrays.asList(
+      new Person(1, "Grace", "Hopper", LocalDate.of(1906, Month.DECEMBER, 9)),
+      new Person(2, "Ada", "Lovelace", LocalDate.of(1815, Month.DECEMBER, 10)),
+      new Person(3, "Adele", "Goldberg", LocalDate.of(1945, Month.JULY, 7)),
+      new Person(14, "Anita", "Borg", LocalDate.of(1949, Month.JANUARY, 17)),
+      new Person(5, "Barbara", "Liskov", LocalDate.of(1939, Month.NOVEMBER, 7)));
 
-    @Before
-    public void init() {
-        // MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.openMocks(this);
+  @Before
+  public void init()
+  {
+    // MockitoAnnotations.initMocks(this);
+    MockitoAnnotations.openMocks(this);
 
-        when(repository.findAll())
-                .thenReturn(people);
-    }
+    when(repository.findAll()).thenReturn(people);
+  }
 
-    @Test
-    public void findMaxId() {
-        // assertThat(service.getHighestId(), is(14)); // Hamcrest matcher
-        assertEquals(14, service.getHighestId());
-    }
+  @Test
+  public void findMaxId()
+  {
+    // assertThat(service.getHighestId(), is(14)); // Hamcrest matcher
+    assertEquals(14, service.getHighestId());
+  }
 
-    @Test
-    public void getLastNames() {
-        assertThat(service.getLastNames(),
-                containsInAnyOrder("Borg", "Goldberg", "Hopper",
-                        "Liskov", "Lovelace"));
-    }
+  @Test
+  public void getLastNames()
+  {
+    assertThat(service.getLastNames(), containsInAnyOrder("Borg", "Goldberg", "Hopper", "Liskov", "Lovelace"));
+  }
 
-    @Test
+  @Test
     public void getTotalPeople() {
         when(repository.count())
                 .thenReturn((long) people.size());
@@ -68,7 +69,7 @@ public class PersonServiceTest {
         assertThat(service.getTotalPeople(), is(equalTo((long) people.size())));
     }
 
-    @Test
+  @Test
     public void saveAllPeople() {
         when(repository.save(any(Person.class)))
                 .thenReturn(people.get(0),
@@ -88,7 +89,7 @@ public class PersonServiceTest {
         verifyNoMoreInteractions(repository);
     }
 
-    @Test
+  @Test
     public void useAnswer() {
         // Anonymous inner class
 //        when(repository.save(any(Person.class)))
@@ -111,7 +112,7 @@ public class PersonServiceTest {
         assertThat(ids, contains(actuals));
     }
 
-    @Test(expected = RuntimeException.class)
+  @Test(expected = RuntimeException.class)
     public void savePersonThrowsException() {
         when(repository.save(any(Person.class)))
                 .thenThrow(RuntimeException.class);
@@ -119,31 +120,30 @@ public class PersonServiceTest {
         service.savePeople(people.get(0));
     }
 
-    @Test
-    public void createPerson() {
-        Person hopper = people.get(0);
+  @Test
+  public void createPerson()
+  {
+    Person hopper = people.get(0);
 
-        Person person = service.createPerson(hopper.getId(),
-                hopper.getFirst(),
-                hopper.getLast(),
-                hopper.getDob());
+    Person person = service.createPerson(hopper.getId(), hopper.getFirst(), hopper.getLast(), hopper.getDob());
 
-        verify(repository).save(personArg.capture());
-        assertThat(personArg.getValue(), is(hopper));  // verifies the local variable
-        assertThat(person, is(hopper));  // verifies the return
-    }
+    verify(repository).save(personArg.capture());
+    assertThat(personArg.getValue(), is(hopper));  // verifies the local variable
+    assertThat(person, is(hopper));  // verifies the return
+  }
 
-    @Test
-    public void deleteAll() {
-        // Not necessary, but works
-        doNothing().when(repository).delete(any(Person.class));
+  @Test
+  public void deleteAll()
+  {
+    // Not necessary, but works
+    doNothing().when(repository).delete(any(Person.class));
 
-        service.deleteAll();
+    service.deleteAll();
 
-        verify(repository, times(5)).delete(any(Person.class));
-    }
+    verify(repository, times(5)).delete(any(Person.class));
+  }
 
-    @Test
+  @Test
     public void findByIdThatDoesNotExist() {
         // General case
         // when(repository.findById(anyInt())).thenReturn(Optional.empty());
@@ -155,7 +155,7 @@ public class PersonServiceTest {
         assertThat(personList, is(emptyCollectionOf(Person.class)));
     }
 
-    @Test
+  @Test
     public void findByIdsThatDoExist() {
         when(repository.findById(anyInt()))
                 .thenAnswer(invocation -> people.stream()
@@ -169,3 +169,4 @@ public class PersonServiceTest {
                 people.get(4)));
     }
 }
+

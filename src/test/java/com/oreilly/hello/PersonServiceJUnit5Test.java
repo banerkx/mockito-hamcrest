@@ -25,32 +25,33 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class PersonServiceJUnit5Test {
+public class PersonServiceJUnit5Test
+{
 
-    @Mock
-    private PersonRepository repository;
+  @Mock
+  private PersonRepository repository;
 
-    @InjectMocks
-    private PersonService service;
+  @InjectMocks
+  private PersonService service;
 
-    @Captor
-    private ArgumentCaptor<Person> personArg;
+  @Captor
+  private ArgumentCaptor<Person> personArg;
 
-    private final List<Person> people = Arrays.asList(
-            new Person(1, "Grace", "Hopper", LocalDate.of(1906, Month.DECEMBER, 9)),
-            new Person(2, "Ada", "Lovelace", LocalDate.of(1815, Month.DECEMBER, 10)),
-            new Person(3, "Adele", "Goldberg", LocalDate.of(1945, Month.JULY, 7)),
-            new Person(14, "Anita", "Borg", LocalDate.of(1949, Month.JANUARY, 17)),
-            new Person(5, "Barbara", "Liskov", LocalDate.of(1939, Month.NOVEMBER, 7)));
+  private final List<Person> people = Arrays.asList(
+      new Person(1, "Grace", "Hopper", LocalDate.of(1906, Month.DECEMBER, 9)),
+      new Person(2, "Ada", "Lovelace", LocalDate.of(1815, Month.DECEMBER, 10)),
+      new Person(3, "Adele", "Goldberg", LocalDate.of(1945, Month.JULY, 7)),
+      new Person(14, "Anita", "Borg", LocalDate.of(1949, Month.JANUARY, 17)),
+      new Person(5, "Barbara", "Liskov", LocalDate.of(1939, Month.NOVEMBER, 7)));
 
-    // Can't be done because JUnit 5 extension is _strict_ and
-    // many of these tests don't call repository.findAll()
-//    @BeforeEach
-//    void setUp() {
-//        when(repository.findAll()).thenReturn(people);
-//    }
+  // Can't be done because JUnit 5 extension is _strict_ and
+  // many of these tests don't call repository.findAll()
+  // @BeforeEach
+  // void setUp() {
+  // when(repository.findAll()).thenReturn(people);
+  // }
 
-    @Test
+  @Test
     public void findMaxId() {
         when(repository.findAll()).thenReturn(people);
 
@@ -61,7 +62,7 @@ public class PersonServiceJUnit5Test {
         verifyNoMoreInteractions(repository);
     }
 
-    @Test
+  @Test
     public void getLastNames() {
         when(repository.findAll()).thenReturn(people);
 
@@ -70,7 +71,7 @@ public class PersonServiceJUnit5Test {
                         "Liskov", "Lovelace"));
     }
 
-    @Test
+  @Test
     public void getTotalPeople() {
         when(repository.count())
                 .thenReturn((long) people.size());
@@ -78,7 +79,7 @@ public class PersonServiceJUnit5Test {
         assertThat(service.getTotalPeople(), is(equalTo((long) people.size())));
     }
 
-    @Test
+  @Test
     public void saveAllPeople() {
         when(repository.save(any(Person.class)))
                 .thenReturn(people.get(0),
@@ -97,7 +98,7 @@ public class PersonServiceJUnit5Test {
         verify(repository, never()).delete(any(Person.class));
     }
 
-    @Test
+  @Test
     public void useAnswer() {
         // Anonymous inner class
 //        when(repository.save(any(Person.class)))
@@ -120,7 +121,7 @@ public class PersonServiceJUnit5Test {
         assertThat(ids, contains(actuals));
     }
 
-    @Test
+  @Test
     public void savePersonThrowsException() {
         when(repository.save(any(Person.class)))
                 .thenThrow(RuntimeException.class);
@@ -128,33 +129,26 @@ public class PersonServiceJUnit5Test {
         assertThrows(RuntimeException.class, () -> service.savePeople(people.get(0)));
     }
 
-    @Test
-    public void createPerson() {
-        Person hopper = people.get(0);
+  @Test
+  public void createPerson()
+  {
+    Person hopper = people.get(0);
 
-        // The method under test doesn't use the return value from save,
-        // so we don't need to mock it, but if we wanted to, we could add:
-        // when(repository.save(any(Person.class))).thenReturn(hopper);
+    // The method under test doesn't use the return value from save,
+    // so we don't need to mock it, but if we wanted to, we could add:
+    // when(repository.save(any(Person.class))).thenReturn(hopper);
 
-        // Method under test
-        Person person = service.createPerson(
-                hopper.getId(),
-                hopper.getFirst(),
-                hopper.getLast(),
-                hopper.getDob()
-        );
+    // Method under test
+    Person person = service.createPerson(hopper.getId(), hopper.getFirst(), hopper.getLast(), hopper.getDob());
 
-        // Check that save was called on the mock repository
-        // and capture the argument passed to it
-        verify(repository).save(personArg.capture());
+    // Check that save was called on the mock repository
+    // and capture the argument passed to it
+    verify(repository).save(personArg.capture());
 
-        assertAll(
-                () -> assertThat(personArg.getValue(), is(hopper)),
-                () -> assertThat(person, is(hopper))
-        );
-    }
+    assertAll(() -> assertThat(personArg.getValue(), is(hopper)), () -> assertThat(person, is(hopper)));
+  }
 
-    @Test
+  @Test
     public void deleteAll() {
         when(repository.findAll()).thenReturn(people);
         doNothing().when(repository).delete(any(Person.class));
@@ -164,7 +158,7 @@ public class PersonServiceJUnit5Test {
         verify(repository, times(5)).delete(any(Person.class));
     }
 
-    @Test
+  @Test
     public void findByIdThatDoesNotExist() {
         // General case
         // when(repository.findById(anyInt())).thenReturn(Optional.empty());
@@ -176,7 +170,7 @@ public class PersonServiceJUnit5Test {
         assertThat(personList, is(emptyCollectionOf(Person.class)));
     }
 
-    @Test
+  @Test
     public void findByIdsThatDoExist() {
         when(repository.findById(anyInt()))
                 .thenAnswer(invocation -> people.stream()
@@ -190,3 +184,4 @@ public class PersonServiceJUnit5Test {
                 people.get(4)));
     }
 }
+

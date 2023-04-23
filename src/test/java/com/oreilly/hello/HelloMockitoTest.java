@@ -18,17 +18,18 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class HelloMockitoTest {
-    @Mock
-    private PersonRepository repository;
+class HelloMockitoTest
+{
+  @Mock
+  private PersonRepository repository;
 
-    @Mock
-    private TranslationService translationService;
+  @Mock
+  private TranslationService translationService;
 
-    @InjectMocks
-    private HelloMockito helloMockito;
+  @InjectMocks
+  private HelloMockito helloMockito;
 
-    @Test @DisplayName("Greet Admiral Hopper")
+  @Test @DisplayName("Greet Admiral Hopper")
     void greetForPersonThatExists() {
         when(repository.findById(anyInt()))
                 .thenReturn(Optional.of(new Person(1, "Grace", "Hopper", LocalDate.now())));
@@ -44,7 +45,7 @@ class HelloMockitoTest {
         inOrder.verify(translationService).translate(anyString(), eq("en"), eq("en"));
     }
 
-    @Test @DisplayName("Greet a person not in the database")
+  @Test @DisplayName("Greet a person not in the database")
     void greetForPersonThatDoesNotExist() {
         when(repository.findById(anyInt()))
                 .thenReturn(Optional.empty());
@@ -60,12 +61,14 @@ class HelloMockitoTest {
         inOrder.verify(translationService).translate(anyString(), eq("en"), eq("en"));
     }
 
-    @Test
-    void testGetterAndSetter() {
-        assertThat(helloMockito.getGreeting()).isNotNull();
-        assertThat(helloMockito.getGreeting()).isEqualTo("Hello, %s, from Mockito!");
+  @Test
+  void testGetterAndSetter()
+  {
+    assertThat(helloMockito.getGreeting()).isNotNull();
+    assertThat(helloMockito.getGreeting()).isEqualTo("Hello, %s, from Mockito!");
 
-        helloMockito.setGreeting("Hi there, %s, from Mockito!");
-        assertThat(helloMockito.getGreeting()).isEqualTo("Hi there, %s, from Mockito!");
-    }
+    helloMockito.setGreeting("Hi there, %s, from Mockito!");
+    assertThat(helloMockito.getGreeting()).isEqualTo("Hi there, %s, from Mockito!");
+  }
 }
+
